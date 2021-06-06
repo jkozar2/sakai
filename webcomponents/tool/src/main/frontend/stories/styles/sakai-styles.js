@@ -1,4 +1,4 @@
-export var styles = `
+export const styles = `
 <style>
 html {
 
