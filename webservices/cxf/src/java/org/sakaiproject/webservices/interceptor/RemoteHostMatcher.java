@@ -99,6 +99,7 @@ public class RemoteHostMatcher {
     private ServerConfigurationService serverConfigurationService;
 
     public void init() {
+        allowRequests.add("/sakai-ws/rest/sakai/getUserSortName");  //allow getUserSortName by default.
         allowRequests = serverConfigurationService.getStringList("webservices.allow-request", allowRequests);
         allowPattern = serverConfigurationService.getPatternList("webservices.allow", allow);
         denyPattern = serverConfigurationService.getPatternList("webservices.deny", deny);
