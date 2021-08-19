@@ -1,6 +1,7 @@
 import { RubricsElement } from "./rubrics-element.js";
 import { html } from "../assets/lit-element/lit-element.js";
 import "./sakai-rubric-grading-comment.js";
+import "./sakai-rubric-summary.js";
 import { SakaiRubricsLanguage, tr } from "./sakai-rubrics-language.js";
 
 export class SakaiRubricGrading extends RubricsElement {
@@ -84,7 +85,13 @@ export class SakaiRubricGrading extends RubricsElement {
 
     return html`
       <h3 style="margin-bottom: 10px;">${this.rubric.title}</h3>
-      ${this.evaluation && this.evaluation.status === "DRAFT" ? html`
+      <div class="rubrics-tab-row">
+        <a href="javascript:void(0);" id="rubric-grading-or-preview-button" class="rubrics-tab-button rubrics-tab-selected" @keypress=${this.openGradePreviewTab} @click=${this.openGradePreviewTab}><sr-lang key="grading_rubric">gradingrubric</sr-lang></a>
+        <a href="javascript:void(0);" id="rubric-student-summary-button" class="rubrics-tab-button" @keypress=${this.makeStudentSummary} @click=${this.makeStudentSummary}><sr-lang key="student_summary">studentsummary</sr-lang></a>
+        <a href="javascript:void(0);" id="rubric-criteria-summary-button" class="rubrics-tab-button" @keypress=${this.makeCriteriaSummary} @click=${this.makeCriteriaSummary}><sr-lang key="criteria_summary">criteriasummary</sr-lang></a>
+      </div>
+      <div id="rubric-grading-or-preview" class="rubric-tab-content rubrics-visible">
+        ${this.evaluation && this.evaluation.status === "DRAFT" ? html`
         <div class="sak-banner-warn">
           <sr-lang key="draft_evaluation">DRAFT</sr-lang>
         </div>
@@ -167,7 +174,25 @@ export class SakaiRubricGrading extends RubricsElement {
           <sr-lang key="total">Total</sr-lang>: <strong id="sakai-rubrics-total-points">${this.totalPoints.toLocaleString(this.locale, {maximumFractionDigits: 2})}</strong>
         </div>
       </div>
+      </div>
+      <div id="rubric-student-summary" class="rubric-tab-content"></div>
+      <div id="rubric-criteria-summary" class="rubric-tab-content"></div>
     `;
+  }
+
+  openGradePreviewTab(e) {
+    e.stopPropagation();
+    this.openRubricsTab("rubric-grading-or-preview");
+  }
+
+  makeStudentSummary(e) {
+    e.stopPropagation();
+    this.makeASummary("student");
+  }
+
+  makeCriteriaSummary(e) {
+    e.stopPropagation();
+    this.makeASummary("criteria");
   }
 
   updateComment(e) {
